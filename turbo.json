@@ -1,0 +1,51 @@
+{
+	"$schema": "https://turborepo.org/schema.json",
+	"pipeline": {
+		"init": {},
+		"migrate": {},
+		"build": {
+			"outputs": ["dist/**", ".next/**"],
+			"cache": true,
+			"inputs": ["src/**/*.tsx", "src/**/*.ts", "test/**/*.ts"]
+		},
+		"format": {
+			"inputs": [
+				"./packages/config/prettier/**/*",
+				"src/**/*.tsx",
+				"src/**/*.ts",
+				"test/**/*.ts"
+			],
+			"outputs": [],
+			"cache": false
+		},
+		"format:check": {
+			"outputs": [],
+			"cache": true
+		},
+		"lint": {
+			"inputs": [
+				"./packages/config/eslint-config-custom/**/*",
+				"src/**/*.tsx",
+				"src/**/*.ts",
+				"test/**/*.ts"
+			],
+			"outputs": [],
+			"cache": true
+		},
+		"lint:fix": {
+			"outputs": [],
+			"cache": false
+		},
+		"test": {
+			"outputs": ["coverage/**"],
+			"cache": false,
+			"inputs": ["src/**/*.tsx", "src/**/*.ts", "test/**/*.ts"]
+		},
+		"dev": {
+			"cache": false
+		},
+		"clean": {
+			"cache": false
+		}
+	}
+}

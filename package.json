@@ -1,0 +1,12 @@
+{
+    "name": "ao-monorepo",
+    "version": "0.0.0",
+    "private": true,
+    "scripts": {
+      "dev": "turbo run dev --parallel --no-cache",
+      "otel:run": "docker run --rm -v \"$(pwd)/otel-config.yaml\":/otel-config.yaml:ro -p 4318:4318 --name otel-collector otel/opentelemetry-collector:latest --config otel-config.yaml"
+    },
+    "devDependencies": {
+      "turbo": "1.13.3"
+    }
+  }
