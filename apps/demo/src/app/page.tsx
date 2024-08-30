@@ -1,7 +1,14 @@
 import Image from "next/image";
 import { action } from "./action";
 import { ActionButton } from "./client";
-export default function Home() {
+export const revalidate = 0;
+export default async function Home() {
+  const data = await fetch("https://pokeapi.co/api/v2/pokemon/ditto", {
+    cache: "force-cache",
+    next: {
+      tags: ["pokemon"],
+    },
+  });
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
       <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">

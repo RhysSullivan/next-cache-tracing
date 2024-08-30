@@ -5,6 +5,7 @@ import { registerOTel } from "@vercel/otel";
 export function register() {
   registerOTel({
     serviceName: "next-cache-tracing",
+    instrumentations: [],
     spanProcessors: [
       new SimpleSpanProcessor(
         new OTLPTraceExporter({
