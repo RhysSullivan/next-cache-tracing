@@ -5,7 +5,15 @@ import { ArcherContainer, ArcherElement } from "react-archer";
 import { RelationType } from "react-archer/lib/types";
 
 // transparent purple box
-type Colors = "purple" | "yellow";
+type Colors = "purple" | "yellow" | "blackish";
+
+enum Ids {
+  DataCache = "data-cache",
+  DataCacheMiss = "data-cache-miss",
+  DataCacheSet = "data-cache-set",
+  DataSource = "data-source",
+  DataSourceHit = "data-source-hit",
+}
 
 function getColorAsHex(color: Colors) {
   switch (color) {
@@ -18,6 +26,11 @@ function getColorAsHex(color: Colors) {
       return {
         backgroundColor: "#4A391D",
         border: "#E8B256",
+      };
+    case "blackish":
+      return {
+        backgroundColor: "#161616",
+        border: "#454545",
       };
   }
 }
@@ -60,13 +73,13 @@ function Box(props: BoxProps) {
 }
 
 type MissHitProps = {
-  miss: boolean;
+  type: "miss" | "hit" | "set";
   color: Colors;
   id?: string;
   relations?: RelationType[];
 };
 
-function MissHit(props: MissHitProps) {
+function MissSetHit(props: MissHitProps) {
   return (
     <Box
       color={props.color}
@@ -76,7 +89,7 @@ function MissHit(props: MissHitProps) {
       id={props.id}
       relations={props.relations}
     >
-      {props.miss ? "MISS" : "HIT"}
+      {props.type === "miss" ? "MISS" : props.type === "hit" ? "HIT" : "SET"}
     </Box>
   );
 }
@@ -126,21 +139,67 @@ function DataCache() {
           </Box>
         </Box>
       </div>
-      <MissHit
-        miss
+      <MissSetHit
+        type="miss"
         id="data-cache-miss"
         relations={[
           {
-            targetId: "data-cache-hit",
+            targetId: "data-cache-set",
             targetAnchor: "top",
             sourceAnchor: "bottom",
             style: { strokeColor: "#8A52AF", strokeWidth: 2 },
           },
+          greyArrow({
+            targetId: "data-source-hit",
+            targetAnchor: "left",
+            sourceAnchor: "right",
+          }),
         ]}
         color="purple"
       />
-      <MissHit miss={false} id="data-cache-hit" color="purple" />
+      <MissSetHit type="set" id="data-cache-set" color="purple" />
     </div>
+  );
+}
+
+function greyArrow(
+  props: Pick<
+    RelationType,
+    "targetId" | "sourceAnchor" | "targetAnchor" | "style"
+  >
+) {
+  const { style = {}, ...rest } = props;
+  return {
+    ...props,
+    style: {
+      strokeColor: "#878787",
+      strokeWidth: 2,
+      strokeDasharray: "0,0",
+      endShape: {
+        arrow: {
+          arrowLength: 8,
+          arrowThickness: 8,
+        },
+      },
+      ...style,
+    },
+  };
+}
+
+function ReqMemoCache() {
+  return (
+    <MissSetHit
+      type="miss"
+      id="req-memo-miss"
+      color="yellow"
+      relations={[
+        greyArrow({
+          targetId: "data-cache",
+          targetAnchor: "left",
+          sourceAnchor: "right",
+        }),
+      ]}
+    />
   );
 }
 
@@ -157,32 +216,26 @@ export function CacheSystemDiagram() {
       noCurves
       style={{ strokeDasharray: "6,6" }}
     >
-      <div className="p-32 grid grid-cols-2 gap-8">
-        <MissHit
-          miss
-          id="req-memo-miss"
-          color="yellow"
-          relations={[
-            {
-              targetId: "data-cache",
-              targetAnchor: "left",
-              sourceAnchor: "right",
-              style: {
-                strokeColor: "#878787",
-                strokeWidth: 2,
-                strokeDasharray: "0,0",
-                endShape: {
-                  arrow: {
-                    arrowLength: 8,
-                    arrowThickness: 8,
-                  },
-                },
-              },
-            },
-          ]}
-        />
-        {/* connect to data cache */}
+      <div className="p-32 grid grid-cols-6 gap-8">
+        <ReqMemoCache />
         <DataCache />
+        <div className="flex flex-col items-center gap-4">
+          <Box width={120} height={100} color="blackish">
+            <div className="mt-6">Data Source</div>
+          </Box>
+          <MissSetHit
+            type="hit"
+            id="data-source-hit"
+            color="blackish"
+            relations={[
+              greyArrow({
+                targetId: "data-cache-set",
+                targetAnchor: "right",
+                sourceAnchor: "bottom",
+              }),
+            ]}
+          />
+        </div>
       </div>
     </ArcherContainer>
   );
