@@ -13,6 +13,9 @@ enum Ids {
   DataCacheSet = "data-cache-set",
   DataSource = "data-source",
   DataSourceHit = "data-source-hit",
+  RequestMemoCache = "request-memo-cache",
+  RequestMemoCacheMiss = "request-memo-cache-miss",
+  RequestMemoCacheSet = "request-memo-cache-set",
 }
 
 function getColorAsHex(color: Colors) {
@@ -188,18 +191,49 @@ function greyArrow(
 
 function ReqMemoCache() {
   return (
-    <MissSetHit
-      type="miss"
-      id="req-memo-miss"
-      color="yellow"
-      relations={[
-        greyArrow({
-          targetId: Ids.DataCache,
-          targetAnchor: "left",
-          sourceAnchor: "right",
-        }),
-      ]}
-    />
+    <div className="flex flex-col items-center gap-4">
+      <Box width={460} height={120} color="blackish" className="flex flex-row">
+        Rendering
+        <Box width={230} height={60} color="yellow">
+          <div className="mt-2 font-bold">Request Memoization</div>
+        </Box>
+      </Box>
+      <MissSetHit
+        type="miss"
+        id={Ids.RequestMemoCacheMiss}
+        color="yellow"
+        relations={[
+          greyArrow({
+            targetId: Ids.DataCache,
+            targetAnchor: "left",
+            sourceAnchor: "right",
+          }),
+        ]}
+      />
+      <MissSetHit type="set" id={Ids.RequestMemoCacheSet} color="yellow" />
+    </div>
+  );
+}
+
+function DataSource() {
+  return (
+    <div className="flex flex-col items-center gap-4 pt-9">
+      <Box width={120} height={100} color="blackish">
+        <div className="mt-6">Data Source</div>
+      </Box>
+      <MissSetHit
+        type="hit"
+        id={Ids.DataSourceHit}
+        color="blackish"
+        relations={[
+          greyArrow({
+            targetId: Ids.DataCacheSet,
+            targetAnchor: "right",
+            sourceAnchor: "bottom",
+          }),
+        ]}
+      />
+    </div>
   );
 }
 
@@ -216,26 +250,10 @@ export function CacheSystemDiagram() {
       noCurves
       style={{ strokeDasharray: "6,6" }}
     >
-      <div className="p-32 grid grid-cols-6 gap-8">
+      <div className="p-32 grid grid-cols-3 gap-8">
         <ReqMemoCache />
         <DataCache />
-        <div className="flex flex-col items-center gap-4">
-          <Box width={120} height={100} color="blackish">
-            <div className="mt-6">Data Source</div>
-          </Box>
-          <MissSetHit
-            type="hit"
-            id={Ids.DataSourceHit}
-            color="blackish"
-            relations={[
-              greyArrow({
-                targetId: Ids.DataCacheSet,
-                targetAnchor: "right",
-                sourceAnchor: "bottom",
-              }),
-            ]}
-          />
-        </div>
+        <DataSource />
       </div>
     </ArcherContainer>
   );

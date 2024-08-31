@@ -13,7 +13,7 @@
     "@opentelemetry/exporter-trace-otlp-http": "^0.52.1",
     "@opentelemetry/sdk-trace-node": "^1.25.1",
     "@vercel/otel": "^1.10.0",
-    "next": "14.2.5",
+    "next": "file:../../../next/packages/next",
     "react": "^18",
     "react-dom": "^18"
   },
