@@ -103,10 +103,10 @@ function DataCache() {
           height={120}
           color="purple"
           className="relative"
-          id="data-cache"
+          id={Ids.DataCache}
           relations={[
             {
-              targetId: "data-cache-miss",
+              targetId: Ids.DataCacheMiss,
               targetAnchor: "top",
               sourceAnchor: "bottom",
               style: { strokeColor: "#8A52AF", strokeWidth: 2 },
@@ -141,23 +141,23 @@ function DataCache() {
       </div>
       <MissSetHit
         type="miss"
-        id="data-cache-miss"
+        id={Ids.DataCacheMiss}
         relations={[
           {
-            targetId: "data-cache-set",
+            targetId: Ids.DataCacheSet,
             targetAnchor: "top",
             sourceAnchor: "bottom",
             style: { strokeColor: "#8A52AF", strokeWidth: 2 },
           },
           greyArrow({
-            targetId: "data-source-hit",
+            targetId: Ids.DataSourceHit,
             targetAnchor: "left",
             sourceAnchor: "right",
           }),
         ]}
         color="purple"
       />
-      <MissSetHit type="set" id="data-cache-set" color="purple" />
+      <MissSetHit type="set" id={Ids.DataCacheSet} color="purple" />
     </div>
   );
 }
@@ -194,7 +194,7 @@ function ReqMemoCache() {
       color="yellow"
       relations={[
         greyArrow({
-          targetId: "data-cache",
+          targetId: Ids.DataCache,
           targetAnchor: "left",
           sourceAnchor: "right",
         }),
@@ -225,11 +225,11 @@ export function CacheSystemDiagram() {
           </Box>
           <MissSetHit
             type="hit"
-            id="data-source-hit"
+            id={Ids.DataSourceHit}
             color="blackish"
             relations={[
               greyArrow({
-                targetId: "data-cache-set",
+                targetId: Ids.DataCacheSet,
                 targetAnchor: "right",
                 sourceAnchor: "bottom",
               }),
